@@ -14,7 +14,7 @@ public class LoginTests : PageTest
         try
         {
             await Page.WaitForSelectorAsync(".fc-button.fc-cta-consent.fc-primary-button",
-                new PageWaitForSelectorOptions { Timeout = 5000 });
+                new PageWaitForSelectorOptions { Timeout = 4000 });
             await Page.ClickAsync(".fc-button.fc-cta-consent.fc-primary-button");
             await Page.WaitForTimeoutAsync(1000);
         }
