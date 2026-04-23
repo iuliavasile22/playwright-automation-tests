@@ -40,12 +40,14 @@ public class RegisterTests : PageTest
     await Page.FillAsync("[data-qa='signup-email']", "mockup_user@email.com");
     await Page.ClickAsync("[data-qa='signup-button']");
 
-    await Expect(Page.Locator("h1:has-text('Enter account information')")).ToBeVisibleAsync();
+    await Expect(Page.Locator("h2:has-text('Enter account information')")).ToBeVisibleAsync();
 
 
-    await Page.CheckAsync("[data-qa='title']");
+    await Page.CheckAsync("label:has-text('Mr.')");
+    await Page.CheckAsync("label:has-text('Mrs.')");
 
     await Page.FillAsync("[data-qa='name']", "jane doe");
+    await Page.FillAsync("[data-qa='email']", "janedoe@gmail.com");
     await Page.FillAsync("[data-qa='password']", "Password123!");
 
     // Step 9: Fill in date of birth
@@ -61,6 +63,7 @@ public class RegisterTests : PageTest
     //Fill additional details
     await Page.FillAsync("[data-qa='first_name']", "Mockup_name");
     await Page.FillAsync("[data-qa='last_name']", "User");
+    await Page.FillAsync("[data-qa='company']", "Microsoft");
     await Page.FillAsync("[data-qa='address']", "123 Test Street");
     await Page.FillAsync("[data-qa='address2']", "2346 Test Street");
     await Page.SelectOptionAsync("[data-qa='country']", "India");
@@ -79,16 +82,12 @@ public class RegisterTests : PageTest
     // Click continue button
     await Page.ClickAsync("[data-qa='continue-button']");
 
-    await Expect(Page.Locator("h2:has-text('Logged in as username')")).ToBeVisibleAsync();
+    await Expect(Page.Locator("a:has-text('Logged in as username')")).ToBeVisibleAsync();
 
 
     // Click delete button
-    await Page.ClickAsync("[data-qa='']");
-
-    await Expect(Page.Locator("h2:has-text('ACCOUNT DELETED!')")).ToBeVisibleAsync();
-
-    // Click delete button
-    await Page.ClickAsync("[data-qa='']");
+    await Page.ClickAsync("a:has-text('Delete Account')");
+    await Expect(Page.Locator("h2:has-text('Account deleted!')")).ToBeVisibleAsync();
   }
 
 }
