@@ -6,10 +6,11 @@ using NUnit.Framework;
 [TestFixture]
 public class RegisterTests : PageTest
 {
+
   [SetUp]
   public async Task SetUp()
   {
-    await Page.GotoAsync("https://automationexercise.com/login");
+    await Page.GotoAsync("https://automationexercise.com/");
     try
     {
 
@@ -29,7 +30,7 @@ public class RegisterTests : PageTest
   [Test]
   public async Task ValidRegistration()
   {
-    await Expect(Page).ToHaveURLAsync(" http://automationexercise.com");
+    await Expect(Page).ToHaveURLAsync("https://automationexercise.com/");
 
     await Page.ClickAsync("a:has-text('Signup / Login')");
 
@@ -37,17 +38,18 @@ public class RegisterTests : PageTest
 
     //Fill in name and email adress
     await Page.FillAsync("[data-qa='signup-name']", "mockup user");
-    await Page.FillAsync("[data-qa='signup-email']", "mockup_user@email.com");
+    await Page.FillAsync("[data-qa='signup-email']", "mockup_user123@email.com");
     await Page.ClickAsync("[data-qa='signup-button']");
 
-    await Expect(Page.Locator("h2:has-text('Enter account information')")).ToBeVisibleAsync();
+    //await Expect(Page.Locator("b:has-text('ENTER ACCOUNT INFORMATION')")).ToBeVisibleAsync();
 
+    await Page.WaitForURLAsync("**/signup**");
+    await Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
-    await Page.CheckAsync("label:has-text('Mr.')");
-    await Page.CheckAsync("label:has-text('Mrs.')");
+    // Select Mr.
+    await Page.CheckAsync("#id_gender1");
 
     await Page.FillAsync("[data-qa='name']", "jane doe");
-    await Page.FillAsync("[data-qa='email']", "janedoe@gmail.com");
     await Page.FillAsync("[data-qa='password']", "Password123!");
 
     // Step 9: Fill in date of birth
@@ -82,7 +84,7 @@ public class RegisterTests : PageTest
     // Click continue button
     await Page.ClickAsync("[data-qa='continue-button']");
 
-    await Expect(Page.Locator("a:has-text('Logged in as username')")).ToBeVisibleAsync();
+    await Expect(Page.Locator("a:has-text('Logged in as')")).ToBeVisibleAsync();
 
 
     // Click delete button

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <Playwright>
+    <Option Name="Headless" Value="false" />
+    <Option Name="SlowMo" Value="1000" />
+  </Playwright>
+</RunSettings>
