@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 [TestFixture]
 
-public class Login_correctCredentials : PageTest
+public class LoginTests : PageTest
 {
 
   [SetUp]
@@ -30,7 +30,7 @@ public class Login_correctCredentials : PageTest
 
   [Test]
 
-  public async Task Login_correctCredentials()
+  public async Task Valid_LoginTest()
   {
     await Expect(Page).ToHaveURLAsync("https://automationexercise.com/");
 
@@ -49,5 +49,25 @@ public class Login_correctCredentials : PageTest
     //Delete account
     await Page.ClickAsync("a:has-text('Delete Account')");
     await Expect(Page.Locator("h2:has-text('Account deleted!')")).ToBeVisibleAsync();
+  }
+
+  [Test]
+
+  public async Task Invalid_LoginTest()
+  {
+    await Expect(Page).ToHaveURLAsync("https://automationexercise.com/");
+
+    await Page.ClickAsync("a:has-text('Signup / Login')");
+
+    //Verify that 'Login to your account is visible'
+    await Expect(Page.Locator("h2:has-text('Login to your account')")).ToBeVisibleAsync();
+
+    //Enter correct email address and password
+    await Page.FillAsync("data-qa='login-email'", "wrong_email123@gmail.com");
+    await Page.FillAsync("data-qa=''login-password", "wrongpassword1243");
+    await Page.ClickAsync("[data-qa='login-button']");
+
+    await Expect(Page.Locator("h2 p:has-text('Your email or password is incorrect!')")).ToBeVisibleAsync();
+
   }
 }
