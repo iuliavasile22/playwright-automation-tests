@@ -38,13 +38,10 @@ public class RegisterTests : PageTest
 
     //Fill in name and email adress
     await Page.FillAsync("[data-qa='signup-name']", "mockup user");
-    await Page.FillAsync("[data-qa='signup-email']", "mockup_user123@email.com");
+    await Page.FillAsync("[data-qa='signup-email']", "testuser_" + DateTime.Now.Ticks + "@email.com");
     await Page.ClickAsync("[data-qa='signup-button']");
 
-    //await Expect(Page.Locator("b:has-text('ENTER ACCOUNT INFORMATION')")).ToBeVisibleAsync();
-
-    await Page.WaitForURLAsync("**/signup**");
-    await Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+    await Expect(Page.Locator("b:has-text('ENTER ACCOUNT INFORMATION')")).ToBeVisibleAsync();
 
     // Select Mr.
     await Page.CheckAsync("#id_gender1");
