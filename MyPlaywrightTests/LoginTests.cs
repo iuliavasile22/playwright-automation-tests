@@ -8,6 +8,8 @@ using NUnit.Framework;
 public class LoginTests : PageTest
 {
 
+  private string saved_email;
+  private string saved_password = "Password123!";
   [SetUp]
   public async Task SetUp()
   {
@@ -27,17 +29,19 @@ public class LoginTests : PageTest
 
     }
 
+    saved_email = "mockup_user" + DateTime.Now.Ticks + "@gmail.com";
+
     // Navigate to signup page first
     await Page.ClickAsync("a:has-text('Signup / Login')");
     //Create test account
     await Page.FillAsync("[data-qa='signup-name']", "mockup user");
-    await Page.FillAsync("[data-qa='signup-email']", "testuser_" + DateTime.Now.Ticks + "@email.com");
+    await Page.FillAsync("[data-qa='signup-email']", saved_email);
     await Page.ClickAsync("[data-qa='signup-button']");
     // Select Mr.
     await Page.CheckAsync("#id_gender1");
 
     await Page.FillAsync("[data-qa='name']", "jane doe");
-    await Page.FillAsync("[data-qa='password']", "Password123!");
+    await Page.FillAsync("[data-qa='password']", saved_password);
 
     // Step 9: Fill in date of birth
     await Page.SelectOptionAsync("[data-qa='days']", "10");
@@ -81,11 +85,11 @@ public class LoginTests : PageTest
     await Expect(Page.Locator("h2:has-text('Login to your account')")).ToBeVisibleAsync();
 
     //Enter correct email address and password
-    await Page.FillAsync("[data-qa='login-email']", "my_email123@gmail.com");
-    await Page.FillAsync("[data-qa='login-password']", "password1243");
+    await Page.FillAsync("[data-qa='login-email']", saved_email);
+    await Page.FillAsync("[data-qa='login-password']", saved_password);
     await Page.ClickAsync("[data-qa='login-button']");
 
-    //await Expect(Page.Locator("a:has-text('Logged in as')")).ToBeVisibleAsync();
+    await Expect(Page.Locator("a:has-text('Logged in as')")).ToBeVisibleAsync();
 
     //Delete account
     await Page.ClickAsync("a:has-text('Delete Account')");
@@ -104,8 +108,8 @@ public class LoginTests : PageTest
     await Expect(Page.Locator("h2:has-text('Login to your account')")).ToBeVisibleAsync();
 
     //Enter correct email address and password
-    await Page.FillAsync("[data-qa='login-email']", "wrong_email123@gmail.com");
-    await Page.FillAsync("[data-qa='login-password']", "wrongpassword1243");
+    await Page.FillAsync("[data-qa='login-email']", "wrong_email@gmail.com");
+    await Page.FillAsync("[data-qa='login-password']", "wrong_password");
     await Page.ClickAsync("[data-qa='login-button']");
 
     await Expect(Page.Locator("p:has-text('Your email or password is incorrect!')")).ToBeVisibleAsync();
