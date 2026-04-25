@@ -5,8 +5,10 @@ using NUnit.Framework;
 
 [TestFixture]
 
-public class LoginTests : PageTest
+public class LogoutTest : PageTest
 {
+
+
   private string saved_email;
   private string saved_password;
 
@@ -28,6 +30,7 @@ public class LoginTests : PageTest
     {
 
     }
+
     var helper = new AccountRegistrationHelper(Page);
     await helper.RegisterAccount();
 
@@ -37,8 +40,9 @@ public class LoginTests : PageTest
 
   [Test]
 
-  public async Task Valid_LoginTest()
+  public async Task Valid_Logout_Test()
   {
+
     await Page.ClickAsync("a:has-text('Signup / Login')");
 
     //Verify that 'Login to your account is visible'
@@ -51,26 +55,9 @@ public class LoginTests : PageTest
 
     await Expect(Page.Locator("a:has-text('Logged in as')")).ToBeVisibleAsync();
 
-    //Delete account
-    await Page.ClickAsync("a:has-text('Delete Account')");
-    await Expect(Page.Locator("h2:has-text('Account deleted!')")).ToBeVisibleAsync();
-  }
-
-  [Test]
-
-  public async Task Invalid_LoginTest()
-  {
-    await Page.ClickAsync("a:has-text('Signup / Login')");
-
-    //Verify that 'Login to your account is visible'
-    await Expect(Page.Locator("h2:has-text('Login to your account')")).ToBeVisibleAsync();
-
-    //Enter correct email address and password
-    await Page.FillAsync("[data-qa='login-email']", "wrong_email@gmail.com");
-    await Page.FillAsync("[data-qa='login-password']", "wrong_password");
-    await Page.ClickAsync("[data-qa='login-button']");
-
-    await Expect(Page.Locator("p:has-text('Your email or password is incorrect!')")).ToBeVisibleAsync();
+    await Page.ClickAsync("a:has-text('Logout')");
+    await Expect(Page).ToHaveURLAsync("https://automationexercise.com/login");
 
   }
+
 }

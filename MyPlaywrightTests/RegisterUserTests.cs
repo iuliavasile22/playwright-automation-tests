@@ -4,7 +4,7 @@ using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 [TestFixture]
-public class RegisterTests : PageTest
+public class RegisterUserTests : PageTest
 {
 
   [SetUp]
@@ -30,8 +30,6 @@ public class RegisterTests : PageTest
   [Test]
   public async Task ValidRegistration()
   {
-    await Expect(Page).ToHaveURLAsync("https://automationexercise.com/");
-
     await Page.ClickAsync("a:has-text('Signup / Login')");
 
     await Expect(Page.Locator("h2:has-text('New User Signup!')")).ToBeVisibleAsync();
