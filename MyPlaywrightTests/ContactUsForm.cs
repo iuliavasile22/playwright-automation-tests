@@ -12,7 +12,7 @@ public class ContactUsForm : PageTest
   public async Task SetUp()
   {
     // Override alert before page loads
-    await Page.AddInitScriptAsync("window.alert = () => true;");
+    //await Page.AddInitScriptAsync("window.alert = () => true;");
     await Page.GotoAsync("https://automationexercise.com/");
     try
     {
@@ -34,7 +34,7 @@ public class ContactUsForm : PageTest
 
   public async Task ContactUsForm_Test()
   {
-    //Page.Dialog += async (_, dialog) => await dialog.AcceptAsync();
+    Page.Dialog += async (_, dialog) => await dialog.AcceptAsync();
 
     await Page.ClickAsync("a:has-text('Contact us')");
     await Expect(Page.Locator("h2:has-text('Get In Touch')")).ToBeVisibleAsync();
@@ -48,20 +48,6 @@ public class ContactUsForm : PageTest
     await Page.SetInputFilesAsync("[name='upload_file']", "form_test_file.txt");
 
     await Page.ClickAsync("[data-qa='submit-button']");
-
-    // Wait for success message to become visible
-    //await Page.WaitForSelectorAsync(".status.alert.alert-success",
-    //new PageWaitForSelectorOptions
-    //{
-    //State = WaitForSelectorState.Visible,
-    // Timeout = 10000
-    // });
-
-    // Verify success message is visible
-    //await Page.WaitForTimeoutAsync(3000); // wait for success message to appear
-    //await Expect(Page.Locator(".status.alert.alert-success")).ToBeVisibleAsync();
-
-
     await Page.ClickAsync("a:has-text('Home')");
     await Expect(Page).ToHaveURLAsync("https://automationexercise.com");
   }
