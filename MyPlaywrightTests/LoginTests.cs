@@ -9,36 +9,44 @@ public class LoginTests : PageTest
 {
   private string saved_email;
   private string saved_password;
+  private bool _accountCreated = false;
 
-  [SetUp]
-  public async Task SetUp()
+  private async Task NavigateToHomepage()
   {
     await Page.GotoAsync("https://automationexercise.com/");
     try
     {
-
-      //handle cookie popup
       await Page.WaitForSelectorAsync(".fc-button.fc-cta-consent.fc-primary-button",
-                 new PageWaitForSelectorOptions { Timeout = 4000 });
+          new PageWaitForSelectorOptions { Timeout = 4000 });
       await Page.ClickAsync(".fc-button.fc-cta-consent.fc-primary-button");
       await Page.WaitForTimeoutAsync(1000);
-
     }
-    catch (TimeoutException)
-    {
-
-    }
-    var helper = new AccountRegistrationHelper(Page);
-    await helper.RegisterAccount();
-
-    saved_email = helper.Email;
-    saved_password = helper.Password;
+    catch (TimeoutException) { }
   }
 
+  [SetUp]
+  public async Task SetUp()
+  {
+    await NavigateToHomepage();
+
+    if (!_accountCreated)
+    {
+      var helper = new AccountRegistrationHelper(Page);
+      await helper.RegisterAccount();
+      saved_email = helper.Email;
+      saved_password = helper.Password;
+      _accountCreated = true;
+      await NavigateToHomepage();
+    }
+  }
   [Test]
 
   public async Task Valid_LoginTest()
   {
+    // Verify home page is visible successfully
+    await Expect(Page).ToHaveURLAsync("https://automationexercise.com/");
+    await Expect(Page.Locator("img[alt='Website for automation practice']")).ToBeVisibleAsync();
+
     await Page.ClickAsync("a:has-text('Signup / Login')");
 
     //Verify that 'Login to your account is visible'
@@ -60,6 +68,9 @@ public class LoginTests : PageTest
 
   public async Task Invalid_LoginTest()
   {
+    // Verify home page is visible successfully
+    await Expect(Page).ToHaveURLAsync("https://automationexercise.com/");
+    await Expect(Page.Locator("img[alt='Website for automation practice']")).ToBeVisibleAsync();
     await Page.ClickAsync("a:has-text('Signup / Login')");
 
     //Verify that 'Login to your account is visible'

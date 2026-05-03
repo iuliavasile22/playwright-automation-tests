@@ -10,26 +10,30 @@ public class RegisterUserTests : PageTest
   [SetUp]
   public async Task SetUp()
   {
+    // Launch browser
+    Environment.SetEnvironmentVariable("HEADED", "1");
+
     await Page.GotoAsync("https://automationexercise.com/");
     try
     {
-
-      //handle cookie popup
+      // Handle cookie popup
       await Page.WaitForSelectorAsync(".fc-button.fc-cta-consent.fc-primary-button",
-                 new PageWaitForSelectorOptions { Timeout = 4000 });
+          new PageWaitForSelectorOptions { Timeout = 4000 });
       await Page.ClickAsync(".fc-button.fc-cta-consent.fc-primary-button");
       await Page.WaitForTimeoutAsync(1000);
-
     }
     catch (TimeoutException)
     {
-
     }
   }
 
   [Test]
   public async Task ValidRegistration()
   {
+    // Verify home page is visible successfully
+    await Expect(Page).ToHaveURLAsync("https://automationexercise.com/");
+    await Expect(Page.Locator("img[alt='Website for automation practice']")).ToBeVisibleAsync();
+
     await Page.ClickAsync("a:has-text('Signup / Login')");
 
     await Expect(Page.Locator("h2:has-text('New User Signup!')")).ToBeVisibleAsync();

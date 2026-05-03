@@ -11,26 +11,27 @@ public class SearchProductTests : PageTest
   [SetUp]
   public async Task SetUp()
   {
+    // Launch browser
+    Environment.SetEnvironmentVariable("HEADED", "1");
+
     await Page.GotoAsync("https://automationexercise.com/");
     try
     {
-
-      //handle cookie popup
+      // Handle cookie popup
       await Page.WaitForSelectorAsync(".fc-button.fc-cta-consent.fc-primary-button",
-                 new PageWaitForSelectorOptions { Timeout = 4000 });
+          new PageWaitForSelectorOptions { Timeout = 4000 });
       await Page.ClickAsync(".fc-button.fc-cta-consent.fc-primary-button");
       await Page.WaitForTimeoutAsync(1000);
-
     }
     catch (TimeoutException)
     {
-
     }
   }
   [Test]
 
   public async Task SearchProduct_Test()
   {
+    await Expect(Page).ToHaveURLAsync("https://automationexercise.com/");
     //Click products button
     await Page.ClickAsync("a:has-text('Products')");
 

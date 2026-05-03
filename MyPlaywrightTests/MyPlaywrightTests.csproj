@@ -6,7 +6,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
-    <RunSettingsFilePath>$(MSBuildProjectDirectory)\playwright.runsettings</RunSettingsFilePath>
   </PropertyGroup>
 
   <ItemGroup>

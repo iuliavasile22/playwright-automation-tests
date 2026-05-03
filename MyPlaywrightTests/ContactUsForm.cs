@@ -12,6 +12,9 @@ public class ContactUsForm : PageTest
   [SetUp]
   public async Task SetUp()
   {
+    // Launch browser
+    Environment.SetEnvironmentVariable("HEADED", "1");
+
     await Page.AddInitScriptAsync(@"
         window.alert = () => true;
         window.confirm = () => true;
@@ -38,6 +41,9 @@ public class ContactUsForm : PageTest
 
   public async Task ContactUsForm_Test()
   {
+    // Verify home page is visible successfully
+    await Expect(Page).ToHaveURLAsync("https://automationexercise.com/");
+    await Expect(Page.Locator("img[alt='Website for automation practice']")).ToBeVisibleAsync();
 
     await Page.ClickAsync("a:has-text('Contact us')");
 

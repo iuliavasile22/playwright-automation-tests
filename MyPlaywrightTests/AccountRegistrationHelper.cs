@@ -4,7 +4,7 @@ public class AccountRegistrationHelper
 {
   private readonly IPage _page;
   public string Email { get; private set; }
-  public string Password { get; } = "Password123!";
+  public string Password { get; } = "Password13!";
 
   public AccountRegistrationHelper(IPage page)
   {
