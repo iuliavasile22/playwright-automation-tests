@@ -37,23 +37,22 @@ public class SearchProductTests : PageTest
     await Page.GotoAsync("https://automationexercise.com/products");
 
     //Fill the search input field
-    await Page.FillAsync("[id='search_product']", "Blue Top");
+    await Page.FillAsync("[id='search_product']", "Winter Top");
     await Page.ClickAsync("[id='submit_search']");
 
-    await Page.ClickAsync("h2:has-text('Searched Products')");
+    // Verify searched products heading is visible
+    await Expect(Page.Locator("h2:has-text('Searched Products')")).ToBeVisibleAsync();
 
-    //Verify search results are visible
-    await Expect(Page.Locator(".featured-items")).ToBeVisibleAsync();
+    // Verify search results are visible
+    await Expect(Page.Locator(".productinfo")).ToBeVisibleAsync();
 
-    var productName = Page.Locator(".featured-items.single-products");
-    var count = await productName.CountAsync();
+    var productNames = Page.Locator(".productinfo p");
+    var count = await productNames.CountAsync();
 
     for (int i = 0; i < count; i++)
     {
-      var productText = await productName.Nth(i).InnerTextAsync();
-      Assert.That(productText.ToLower(), Does.Contain("blue top"));
+      var productText = await productNames.Nth(i).InnerTextAsync();
+      Assert.That(productText.ToLower(), Does.Contain("winter top"));
     }
-
-
   }
 }
