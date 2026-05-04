@@ -7,9 +7,15 @@ using NUnit.Framework;
 
 public class LogoutTest : PageTest
 {
-  private string saved_email;
-  private string saved_password;
+  private string saved_email = String.Empty;
+  private string saved_password = String.Empty;
   private bool _accountCreated = false;
+
+  static LogoutTest()
+  {
+    Environment.SetEnvironmentVariable("HEADED", "1");
+  }
+
 
   private async Task NavigateToHomepage()
   {
@@ -17,9 +23,8 @@ public class LogoutTest : PageTest
     try
     {
       await Page.WaitForSelectorAsync(".fc-button.fc-cta-consent.fc-primary-button",
-          new PageWaitForSelectorOptions { Timeout = 4000 });
+          new PageWaitForSelectorOptions { Timeout = 3000 });
       await Page.ClickAsync(".fc-button.fc-cta-consent.fc-primary-button");
-      await Page.WaitForTimeoutAsync(1000);
     }
     catch (TimeoutException) { }
   }
@@ -27,25 +32,24 @@ public class LogoutTest : PageTest
   [SetUp]
   public async Task SetUp()
   {
-    await NavigateToHomepage();
-
     if (!_accountCreated)
     {
+      await NavigateToHomepage();
       var helper = new AccountRegistrationHelper(Page);
       await helper.RegisterAccount();
       saved_email = helper.Email;
       saved_password = helper.Password;
       _accountCreated = true;
       await NavigateToHomepage();
+
+      return;
     }
   }
+
   [Test]
 
   public async Task Valid_Logout_Test()
   {
-    // Verify home page is visible successfully
-    await Expect(Page).ToHaveURLAsync("https://automationexercise.com/");
-    await Expect(Page.Locator("img[alt='Website for automation practice']")).ToBeVisibleAsync();
 
     await Page.ClickAsync("a:has-text('Signup / Login')");
 

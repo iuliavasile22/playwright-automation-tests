@@ -8,7 +8,10 @@ using System.Text.RegularExpressions;
 
 public class ContactUsForm : PageTest
 {
-
+  static ContactUsForm()
+  {
+    Environment.SetEnvironmentVariable("HEADED", "1");
+  }
   [SetUp]
   public async Task SetUp()
   {
@@ -30,9 +33,8 @@ public class ContactUsForm : PageTest
     try
     {
       await Page.WaitForSelectorAsync(".fc-button.fc-cta-consent.fc-primary-button",
-          new PageWaitForSelectorOptions { Timeout = 4000 });
+          new PageWaitForSelectorOptions { Timeout = 3000 });
       await Page.ClickAsync(".fc-button.fc-cta-consent.fc-primary-button");
-      await Page.WaitForTimeoutAsync(1000);
     }
     catch (TimeoutException) { }
   }

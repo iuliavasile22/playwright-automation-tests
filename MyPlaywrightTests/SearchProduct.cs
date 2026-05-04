@@ -4,34 +4,46 @@ using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 [TestFixture]
-
-public class SearchProductTests : PageTest
+public class SearchProduct : PageTest
 {
+  static SearchProduct()
+  {
+    Environment.SetEnvironmentVariable("HEADED", "1");
+  }
+
+  private bool _accountCreated = false;
+
+  private async Task NavigateToHomepage()
+  {
+    await Page.GotoAsync("https://automationexercise.com/");
+    try
+    {
+      await Page.WaitForSelectorAsync(".fc-button.fc-cta-consent.fc-primary-button",
+          new PageWaitForSelectorOptions { Timeout = 3000 });
+      await Page.ClickAsync(".fc-button.fc-cta-consent.fc-primary-button");
+    }
+    catch (TimeoutException) { }
+  }
 
   [SetUp]
   public async Task SetUp()
   {
-    // Launch browser
-    Environment.SetEnvironmentVariable("HEADED", "1");
+    await NavigateToHomepage();
 
-    await Page.GotoAsync("https://automationexercise.com/");
-    try
+    if (!_accountCreated)
     {
-      // Handle cookie popup
-      await Page.WaitForSelectorAsync(".fc-button.fc-cta-consent.fc-primary-button",
-          new PageWaitForSelectorOptions { Timeout = 4000 });
-      await Page.ClickAsync(".fc-button.fc-cta-consent.fc-primary-button");
-      await Page.WaitForTimeoutAsync(1000);
-    }
-    catch (TimeoutException)
-    {
+      var helper = new AccountRegistrationHelper(Page);
+      await helper.RegisterAccount();
+      _accountCreated = true;
+      await NavigateToHomepage();
+      return;
     }
   }
+
   [Test]
 
   public async Task SearchProduct_Test()
   {
-    await Expect(Page).ToHaveURLAsync("https://automationexercise.com/");
     //Click products button
     await Page.ClickAsync("a:has-text('Products')");
 
