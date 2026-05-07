@@ -40,10 +40,10 @@ public class LogoutTest : PageTest
       saved_email = helper.Email;
       saved_password = helper.Password;
       _accountCreated = true;
-      await NavigateToHomepage();
-
       return;
     }
+
+    await NavigateToHomepage();
   }
 
   [Test]
@@ -65,7 +65,6 @@ public class LogoutTest : PageTest
 
     await Page.ClickAsync("a:has-text('Logout')");
     await Expect(Page).ToHaveURLAsync("https://automationexercise.com/login");
-
   }
 
 }

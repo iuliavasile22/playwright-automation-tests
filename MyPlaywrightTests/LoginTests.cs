@@ -17,6 +17,7 @@ public class LoginTests : PageTest
   }
   private async Task NavigateToHomepage()
   {
+    await Page.AddInitScriptAsync("window.alert = () => true;");
     await Page.GotoAsync("https://automationexercise.com/");
     try
     {

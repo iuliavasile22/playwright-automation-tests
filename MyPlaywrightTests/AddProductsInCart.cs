@@ -31,18 +31,18 @@ public class AddProductsInCart : PageTest
   [SetUp]
   public async Task SetUp()
   {
-    await NavigateToHomepage();
-
     if (!_accountCreated)
     {
+      await NavigateToHomepage();
       var helper = new AccountRegistrationHelper(Page);
       await helper.RegisterAccount();
       saved_email = helper.Email;
       saved_password = helper.Password;
       _accountCreated = true;
-      await NavigateToHomepage();
       return;
     }
+
+    await NavigateToHomepage();
   }
 
   [Test]
