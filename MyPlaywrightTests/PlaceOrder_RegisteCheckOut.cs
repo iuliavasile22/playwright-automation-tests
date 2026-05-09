@@ -1,6 +1,7 @@
 using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
+using System.Text.RegularExpressions;
 
 [TestFixture]
 public class PlaceOrder_RegisterCheckOut : PageTest
@@ -18,11 +19,12 @@ public class PlaceOrder_RegisterCheckOut : PageTest
     try
     {
       await Page.WaitForSelectorAsync(".fc-button.fc-cta-consent.fc-primary-button",
-          new PageWaitForSelectorOptions { Timeout = 4000 });
+          new PageWaitForSelectorOptions { Timeout = 3000 });
       await Page.ClickAsync(".fc-button.fc-cta-consent.fc-primary-button");
     }
     catch (TimeoutException) { }
   }
+
 
   private async Task DismissAds()
   {
@@ -57,33 +59,25 @@ public class PlaceOrder_RegisterCheckOut : PageTest
     await Page.ClickAsync("a[href='/view_cart']");
 
     await Page.ClickAsync("a:has-text('Proceed To Checkout')");
-    await Page.WaitForTimeoutAsync(2000);
 
     await Page.ClickAsync(".modal-body a[href='/login']");
-    await Page.WaitForTimeoutAsync(2000);
 
     //Fill in name and email adress
     await Page.FillAsync("[data-qa='signup-name']", "mockup user");
     await Page.FillAsync("[data-qa='signup-email']", "testuser_" + DateTime.Now.Ticks + "@email.com");
     await Page.ClickAsync("[data-qa='signup-button']");
-    await Page.WaitForTimeoutAsync(2000);
 
     await Page.CheckAsync("#id_gender1");
-
     await Page.FillAsync("[data-qa='name']", "jane doe");
-    await Page.FillAsync("[data-qa='password']", "Password123!");
+    await Page.FillAsync("[data-qa='password']", "password");
 
-    // Step 9: Fill in date of birth
     await Page.SelectOptionAsync("[data-qa='days']", "10");
     await Page.SelectOptionAsync("[data-qa='months']", "4");
     await Page.SelectOptionAsync("[data-qa='years']", "1994");
 
-    //Select checkboxes
     await Page.CheckAsync("input[type='checkbox']:near(:text('Sign up for our newsletter!'))");
-
     await Page.CheckAsync("input[type='checkbox']:near(:text('Receive special offers from our partners!'))");
 
-    //Fill additional details
     await Page.FillAsync("[data-qa='first_name']", "Mockup_name");
     await Page.FillAsync("[data-qa='last_name']", "User");
     await Page.FillAsync("[data-qa='company']", "Microsoft");
@@ -94,24 +88,27 @@ public class PlaceOrder_RegisterCheckOut : PageTest
     await Page.FillAsync("[data-qa='city']", "Mockup");
     await Page.FillAsync("[data-qa='zipcode']", "10231");
     await Page.FillAsync("[data-qa='mobile_number']", "1234567891");
-    // create account
     await Page.ClickAsync("[data-qa='create-account']");
-    await Page.WaitForTimeoutAsync(2000);
 
-
+    // create account
     await Expect(Page.Locator("h2:has-text('Account Created!')")).ToBeVisibleAsync();
+
+    // Dismiss ads BEFORE clicking
+    await DismissAds();
 
     // Click continue button
     await Page.ClickAsync("[data-qa='continue-button']");
 
+    // Force navigate to homepage directly
+    await Page.GotoAsync("https://automationexercise.com/");
+    await Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+
+    // Dismiss ads on new page
     await DismissAds();
 
-    // Wait for URL to change away from account_created
-    await Page.WaitForURLAsync("**//**automationexercise.com/**",
-     new PageWaitForURLOptions { Timeout = 15000 });
-
     // Verify user is logged in
-    //await Expect(Page.Locator("a:has-text('Logged in as')")).ToBeVisibleAsync(new() { Timeout = 10000 });
+    await Expect(Page.Locator("a:has-text('Logged in as')"))
+        .ToBeVisibleAsync(new() { Timeout = 10000 });
 
     await Page.ClickAsync("a[href='/view_cart']");
 
@@ -146,7 +143,7 @@ public class PlaceOrder_RegisterCheckOut : PageTest
     await Expect(Page.Locator("td.cart_price").Nth(2)).ToContainTextAsync("Rs. 1000");
 
     // Verify total
-    //await Expect(Page.Locator("td.cart_total_price")).ToContainTextAsync("Rs. 1900");
+    await Expect(Page.Locator("p.cart_total_price").Last).ToContainTextAsync("Rs. 1900");
 
     // Enter description in comment text area
     await Page.FillAsync("textarea.form-control", "This is a test order comment.");
@@ -165,10 +162,14 @@ public class PlaceOrder_RegisterCheckOut : PageTest
 
     // Click Pay and Confirm Order
     await Page.ClickAsync("[data-qa='pay-button']");
-    await Page.WaitForTimeoutAsync(3000);
-    await DismissAds();
 
-    //await Expect(Page.Locator("alert:has-text('Your order has been placed successfully!')")).ToBeVisibleAsync();
+    await Page.WaitForLoadStateAsync(LoadState.Load);
+
+    // Verify order placed successfully - most reliable assertion
+    await Expect(Page).ToHaveTitleAsync("Automation Exercise - Order Placed");
+    await Expect(Page).ToHaveURLAsync(new Regex("payment_done"));
+
+    await DismissAds();
 
     // Click delete button
     await Page.ClickAsync("a:has-text('Delete Account')");

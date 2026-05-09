@@ -37,7 +37,5 @@ public class AccountRegistrationHelper
     await _page.FillAsync("[data-qa='zipcode']", "10231");
     await _page.FillAsync("[data-qa='mobile_number']", "1234567891");
     await _page.ClickAsync("[data-qa='create-account']");
-    await _page.ClickAsync("[data-qa='continue-button']");
-    await _page.ClickAsync("a:has-text('Logout')");
   }
 }
