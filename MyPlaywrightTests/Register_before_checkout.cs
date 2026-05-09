@@ -62,7 +62,6 @@ public class Register_before_Checkout : PageTest
   {
     // Force navigate to homepage directly
     await Page.GotoAsync("https://automationexercise.com/");
-    //await Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
     // Dismiss ads on new page
     await DismissAds();
