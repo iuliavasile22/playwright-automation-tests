@@ -4,9 +4,10 @@ using NUnit.Framework;
 using System.Text.RegularExpressions;
 
 [TestFixture]
-public class PlaceOrder_RegisterCheckOut : PageTest
+public class Register_while_Checkout : PageTest
 {
-  static PlaceOrder_RegisterCheckOut()
+
+  static Register_while_Checkout()
   {
     Environment.SetEnvironmentVariable("HEADED", "1");
   }
@@ -38,8 +39,9 @@ public class PlaceOrder_RegisterCheckOut : PageTest
     catch (Exception) { }
   }
 
+
   [Test]
-  public async Task RegisterCheckOut()
+  public async Task Register_while_CheckOut()
   {
     // Add first product to cart
     await Page.Locator(".product-image-wrapper").Nth(0).HoverAsync();
@@ -64,7 +66,7 @@ public class PlaceOrder_RegisterCheckOut : PageTest
 
     //Fill in name and email adress
     await Page.FillAsync("[data-qa='signup-name']", "mockup user");
-    await Page.FillAsync("[data-qa='signup-email']", "testuser_" + DateTime.Now.Ticks + "@email.com");
+    await Page.FillAsync("[data-qa='signup-email']", "Mockup12@email.com");
     await Page.ClickAsync("[data-qa='signup-button']");
 
     await Page.CheckAsync("#id_gender1");
