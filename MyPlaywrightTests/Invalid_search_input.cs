@@ -4,13 +4,13 @@ using NUnit.Framework;
 using System.Text.RegularExpressions;
 
 [TestFixture]
-public class View_cart_after_navigation : PageTest
+public class Invalid_search_input : PageTest
 {
   private string saved_email = String.Empty;
   private string saved_password = String.Empty;
   private bool _accountCreated = false;
 
-  static View_cart_after_navigation()
+  static Invalid_search_input()
   {
     Environment.SetEnvironmentVariable("HEADED", "1");
   }
@@ -58,40 +58,8 @@ public class View_cart_after_navigation : PageTest
   }
 
   [Test]
-  public async Task View_cart_after_navigation_Test()
+  public async Task Invalid_search_input_Test()
   {
 
-    await Page.ClickAsync("a:has-text('Signup / Login')");
-
-    //Verify that 'Login to your account is visible'
-    await Expect(Page.Locator("h2:has-text('Login to your account')")).ToBeVisibleAsync();
-
-    //Enter correct email address and password
-    await Page.FillAsync("[data-qa='login-email']", saved_email);
-    await Page.FillAsync("[data-qa='login-password']", saved_password);
-    await Page.ClickAsync("[data-qa='login-button']");
-
-    await Expect(Page.Locator("a:has-text('Logged in as')")).ToBeVisibleAsync();
-
-    // Add first product to cart
-    await Page.Locator(".product-image-wrapper").Nth(0).HoverAsync();
-    await Page.ClickAsync(".add-to-cart[data-product-id='1']");
-    await Page.ClickAsync(".modal-footer .btn:has-text('Continue Shopping')");
-
-    // Add second product to cart
-    await Page.Locator(".product-image-wrapper").Nth(1).HoverAsync();
-    await Page.ClickAsync(".add-to-cart[data-product-id='2']");
-
-    await Page.ClickAsync("a[href='/view_cart']");
-
-    await Page.GotoAsync("https://automationexercise.com/products");
-
-    await DismissAds();
-
-    await Page.GotoAsync("https://automationexercise.com/products");
-
-    //Delete account
-    await Page.ClickAsync("a:has-text('Delete Account')");
-    await Expect(Page.Locator("h2:has-text('Account deleted!')")).ToBeVisibleAsync();
   }
 }
