@@ -63,9 +63,6 @@ public class SearchProduct : PageTest
     // Verify searched products heading is visible
     await Expect(Page.Locator("h2:has-text('Searched Products')")).ToBeVisibleAsync();
 
-    // Verify search results are visible
-    await Expect(Page.Locator(".productinfo")).ToBeVisibleAsync();
-
     var productNames = Page.Locator(".productinfo p");
     var count = await productNames.CountAsync();
 

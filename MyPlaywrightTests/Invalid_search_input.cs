@@ -6,15 +6,13 @@ using System.Text.RegularExpressions;
 [TestFixture]
 public class Invalid_search_input : PageTest
 {
-  private string saved_email = String.Empty;
-  private string saved_password = String.Empty;
-  private bool _accountCreated = false;
-
   static Invalid_search_input()
   {
     Environment.SetEnvironmentVariable("HEADED", "1");
   }
-  private async Task NavigateToHomepage()
+
+  [SetUp]
+  public async Task SetUp()
   {
     await Page.AddInitScriptAsync("window.alert = () => true;");
     await Page.GotoAsync("https://automationexercise.com/");
@@ -27,23 +25,6 @@ public class Invalid_search_input : PageTest
     catch (TimeoutException) { }
   }
 
-  [SetUp]
-  public async Task SetUp()
-  {
-    if (!_accountCreated)
-    {
-      await NavigateToHomepage();
-      var helper = new AccountRegistrationHelper(Page);
-      await helper.RegisterAccount();
-      saved_email = helper.Email;
-      saved_password = helper.Password;
-      _accountCreated = true;
-      await NavigateToHomepage();
-
-      return;
-    }
-    await NavigateToHomepage();
-  }
 
   private async Task DismissAds()
   {
@@ -60,6 +41,29 @@ public class Invalid_search_input : PageTest
   [Test]
   public async Task Invalid_search_input_Test()
   {
+    // Force navigate to homepage directly
+    await Page.GotoAsync("https://automationexercise.com/products");
 
+
+    //Fill the search input with invalid characters
+    await Page.FillAsync("[id='search_product']", "cgdgfdtfgd");
+    await Page.ClickAsync("[id='submit_search']");
+
+    // Verify searched products heading is visible
+    await Expect(Page.Locator("h2:has-text('Searched Products')")).ToBeVisibleAsync();
+
+    //Fill the search input with invalid characters
+    await Page.FillAsync("[id='search_product']", "!$*");
+
+    await Page.ClickAsync("[id='submit_search']");
+
+    await Expect(Page.Locator("h2:has-text('Searched Products')")).ToBeVisibleAsync();
+
+    //Fill the search input with "." to demonstrate bug
+    await Page.FillAsync("[id='search_product']", ".");
+
+    await Page.ClickAsync("[id='submit_search']");
+
+    await Expect(Page.Locator("h2:has-text('Searched Products')")).ToBeVisibleAsync();
   }
 }
