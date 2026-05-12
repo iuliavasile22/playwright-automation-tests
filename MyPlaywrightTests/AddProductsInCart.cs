@@ -11,8 +11,6 @@ public class AddProductsInCart : PageTest
     Environment.SetEnvironmentVariable("HEADED", "1");
   }
 
-  private string saved_email = string.Empty;
-  private string saved_password = string.Empty;
   private bool _accountCreated = false;
 
   private async Task NavigateToHomepage()
@@ -36,18 +34,18 @@ public class AddProductsInCart : PageTest
       await NavigateToHomepage();
       var helper = new AccountRegistrationHelper(Page);
       await helper.RegisterAccount();
-      saved_email = helper.Email;
-      saved_password = helper.Password;
       _accountCreated = true;
       return;
     }
 
     await NavigateToHomepage();
   }
-
   [Test]
   public async Task Valid_AddProductsInCart_Test()
   {
+    await Expect(Page).ToHaveURLAsync("https://automationexercise.com/");
+    await Expect(Page).ToHaveTitleAsync("Automation Exercise");
+
     await Page.ClickAsync("a:has-text('Products')");
 
     // Remove ads before interacting
@@ -63,13 +61,14 @@ public class AddProductsInCart : PageTest
     // Add second product to cart
     await Page.Locator(".product-image-wrapper").Nth(1).HoverAsync();
     await Page.ClickAsync(".add-to-cart[data-product-id='2']");
+    await Page.ClickAsync(".modal-footer .btn:has-text('Continue Shopping')");
 
     await Page.ClickAsync("a[href='/view_cart']");
 
-    await Expect(Page.Locator("td.cart_description h4 a:has-text('Blue Top')"))
+    await Expect(Page.Locator("td.cart_description h4:has-text('Blue Top')"))
         .ToBeVisibleAsync(new() { Timeout = 15000 });
 
-    await Expect(Page.Locator("td.cart_description a:has-text('Men Tshirt')"))
+    await Expect(Page.Locator("td.cart_description h4:has-text('Men Tshirt')"))
         .ToBeVisibleAsync(new() { Timeout = 15000 });
 
     // Verify prices, quantity and total

@@ -29,9 +29,7 @@ public class Invalid_search_input : PageTest
   [Test]
   public async Task Invalid_search_input_Test()
   {
-    // Force navigate to homepage directly
     await Page.GotoAsync("https://automationexercise.com/products");
-
 
     //Fill the search input with invalid characters
     await Page.FillAsync("[id='search_product']", "cgdgfdtfgd");

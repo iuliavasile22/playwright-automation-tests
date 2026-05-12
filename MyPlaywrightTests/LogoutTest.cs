@@ -50,6 +50,7 @@ public class LogoutTest : PageTest
 
   public async Task Valid_Logout_Test()
   {
+    await Expect(Page).ToHaveURLAsync("https://automationexercise.com/login");
 
     await Page.ClickAsync("a:has-text('Signup / Login')");
 

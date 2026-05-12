@@ -58,10 +58,10 @@ public class Register_before_Checkout : PageTest
   }
 
   [Test]
-  public async Task Register_before_CheckOut()
+  public async Task Register_before_checkout_Test()
   {
-    // Force navigate to homepage directly
-    await Page.GotoAsync("https://automationexercise.com/");
+    await Expect(Page).ToHaveURLAsync("https://automationexercise.com/");
+    await Expect(Page).ToHaveTitleAsync("Automation Exercise");
 
     // Dismiss ads on new page
     await DismissAds();

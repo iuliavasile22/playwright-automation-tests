@@ -49,6 +49,8 @@ public class LoginTests : PageTest
 
   public async Task Valid_LoginTest()
   {
+    await Expect(Page).ToHaveURLAsync("https://automationexercise.com/");
+    await Expect(Page).ToHaveTitleAsync("Automation Exercise");
 
     await Page.ClickAsync("a:has-text('Signup / Login')");
 
@@ -71,6 +73,9 @@ public class LoginTests : PageTest
 
   public async Task Invalid_LoginTest()
   {
+    await Expect(Page).ToHaveURLAsync("https://automationexercise.com/");
+    await Expect(Page).ToHaveTitleAsync("Automation Exercise");
+
     await Page.ClickAsync("a:has-text('Signup / Login')");
 
     //Verify that 'Login to your account is visible'

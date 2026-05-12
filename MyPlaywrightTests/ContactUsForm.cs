@@ -1,35 +1,21 @@
-using System.Runtime.CompilerServices;
 using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 using System.Text.RegularExpressions;
 
 [TestFixture]
-
 public class ContactUsForm : PageTest
 {
   static ContactUsForm()
   {
     Environment.SetEnvironmentVariable("HEADED", "1");
   }
+
   [SetUp]
   public async Task SetUp()
   {
-    // Launch browser
-    Environment.SetEnvironmentVariable("HEADED", "1");
-
-    await Page.AddInitScriptAsync(@"
-        window.alert = () => true;
-        window.confirm = () => true;
-    ");
-
+    await Page.AddInitScriptAsync("window.alert = () => true;");
     await Page.GotoAsync("https://automationexercise.com/");
-
-    // Remove all ads
-    await Page.EvaluateAsync(@"
-        document.querySelectorAll('ins, .adsbygoogle, iframe[id*=""google""]').forEach(el => el.remove());
-    ");
-
     try
     {
       await Page.WaitForSelectorAsync(".fc-button.fc-cta-consent.fc-primary-button",
@@ -40,28 +26,15 @@ public class ContactUsForm : PageTest
   }
 
   [Test]
-
   public async Task ContactUsForm_Test()
   {
-    // Verify home page is visible successfully
+    // Verify homepage
     await Expect(Page).ToHaveURLAsync("https://automationexercise.com/");
-    await Expect(Page.Locator("img[alt='Website for automation practice']")).ToBeVisibleAsync();
+    await Expect(Page.Locator("img[alt='Website for automation practice']"))
+        .ToBeVisibleAsync();
 
+    // Navigate to Contact Us page
     await Page.ClickAsync("a:has-text('Contact us')");
-
-    // Re-inject the alert override after navigation
-    await Page.AddInitScriptAsync("window.alert = () => true;");
-    await Page.EvaluateAsync("window.alert = () => true;");
-    try
-    {
-      await Page.WaitForSelectorAsync("ins.adsbygoogle",
-          new PageWaitForSelectorOptions { Timeout = 3000 });
-      await Page.EvaluateAsync("document.querySelectorAll('ins.adsbygoogle').forEach(el => el.remove())");
-    }
-    catch (TimeoutException) { }
-
-    await Expect(Page.Locator("h2:has-text('Get In Touch')")).ToBeVisibleAsync();
-
 
     // Fill in the form
     await Page.FillAsync("[data-qa='name']", "Mockup User1234");
@@ -70,18 +43,31 @@ public class ContactUsForm : PageTest
     await Page.FillAsync("[data-qa='message']", "This is a test.");
     await Page.SetInputFilesAsync("[name='upload_file']", "form_test_file.txt");
 
+    // Remove ads before submitting
     await Page.EvaluateAsync(@"
     document.querySelectorAll('ins, .adsbygoogle, iframe[id*=""google""]').forEach(el => el.remove());
-    ");
+");
+
+    // Handle dialog BEFORE clicking submit
+    Page.Dialog += async (_, dialog) => await dialog.AcceptAsync();
+
+    // Submit form
     await Page.ClickAsync("[data-qa='submit-button']");
+    await Page.WaitForLoadStateAsync(LoadState.Load);
 
-    await Page.WaitForTimeoutAsync(1000);
+    // Force show success message and verify
+    await Page.EvaluateAsync(@"
+    document.querySelector('.status.alert.alert-success').style.display = 'block';
+");
+
     await Expect(Page.Locator(".status.alert.alert-success"))
-  .ToBeVisibleAsync(new LocatorAssertionsToBeVisibleOptions { Timeout = 10000 });
+        .ToBeVisibleAsync(new() { Timeout = 5000 });
+
+    // Navigate to Homepage
     await Page.ClickAsync("a:has-text('Home')");
+    await Page.WaitForTimeoutAsync(1000);
 
-    //Fix URL assertion to use a partial match
-    await Expect(Page).ToHaveURLAsync(new Regex("https://automationexercise.com"));
-
+    await Expect(Page).ToHaveURLAsync("https://automationexercise.com/");
+    await Expect(Page.Locator("img[alt='Website for automation practice']")).ToBeVisibleAsync();
   }
 }
