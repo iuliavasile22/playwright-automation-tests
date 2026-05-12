@@ -26,18 +26,6 @@ public class Invalid_search_input : PageTest
   }
 
 
-  private async Task DismissAds()
-  {
-    await Page.EvaluateAsync(@"
-        document.querySelectorAll('ins, .adsbygoogle, iframe[id*=""google""], #google_vignette').forEach(el => el.remove());
-    ");
-    try
-    {
-      await Page.Keyboard.PressAsync("Escape");
-    }
-    catch (Exception) { }
-  }
-
   [Test]
   public async Task Invalid_search_input_Test()
   {

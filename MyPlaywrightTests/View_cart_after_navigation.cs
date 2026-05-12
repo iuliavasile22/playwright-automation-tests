@@ -84,14 +84,23 @@ public class View_cart_after_navigation : PageTest
 
     await Page.ClickAsync("a[href='/view_cart']");
 
-    await Page.GotoAsync("https://automationexercise.com/products");
-
     await DismissAds();
 
     await Page.GotoAsync("https://automationexercise.com/products");
 
-    //Delete account
-    await Page.ClickAsync("a:has-text('Delete Account')");
-    await Expect(Page.Locator("h2:has-text('Account deleted!')")).ToBeVisibleAsync();
+    await DismissAds();
+
+    await Page.GotoAsync("https://automationexercise.com/view_cart");
+
+    await DismissAds();
+
+    // Verify prices, quantity and total
+    await Expect(Page.Locator("td.cart_price").Nth(0)).ToContainTextAsync("Rs. 500");
+    await Expect(Page.Locator("td.cart_quantity").Nth(0)).ToContainTextAsync("1");
+    await Expect(Page.Locator("td.cart_total").Nth(0)).ToContainTextAsync("Rs. 500");
+
+    await Expect(Page.Locator("td.cart_price").Nth(1)).ToContainTextAsync("Rs. 400");
+    await Expect(Page.Locator("td.cart_quantity").Nth(1)).ToContainTextAsync("1");
+    await Expect(Page.Locator("td.cart_total").Nth(1)).ToContainTextAsync("Rs. 400");
   }
 }
