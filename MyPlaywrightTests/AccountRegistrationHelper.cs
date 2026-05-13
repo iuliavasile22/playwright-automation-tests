@@ -52,7 +52,9 @@ public class AccountRegistrationHelper
     await _page.ClickAsync("[data-qa='continue-button']");
 
     // Log out after registration
-    //await _page.ClickAsync("a:has-text('Logout')");
-    //await _page.WaitForLoadStateAsync(LoadState.Load);
+    await _page.ClickAsync("a:has-text('Logout')");
+    await _page.WaitForLoadStateAsync(LoadState.Load);
+
+    await _page.GotoAsync("https://automationexercise.com/");
   }
 }

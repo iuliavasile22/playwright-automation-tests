@@ -66,6 +66,16 @@ public class Register_before_Checkout : PageTest
     // Dismiss ads on new page
     await DismissAds();
 
+    await Page.ClickAsync("a:has-text('Signup / Login')");
+
+    //Verify that 'Login to your account is visible'
+    await Expect(Page.Locator("h2:has-text('Login to your account')")).ToBeVisibleAsync();
+
+    //Enter correct email address and password
+    await Page.FillAsync("[data-qa='login-email']", saved_email);
+    await Page.FillAsync("[data-qa='login-password']", saved_password);
+    await Page.ClickAsync("[data-qa='login-button']");
+
     // Verify user is logged in
     await Expect(Page.Locator("a:has-text('Logged in as')")).ToBeVisibleAsync(new() { Timeout = 700 });
 
