@@ -7,6 +7,9 @@ using System.Text.RegularExpressions;
 public class Register_while_checkout : PageTest
 {
 
+  private string saved_email = "testuser_" + DateTime.Now.Ticks + "@email.com";
+
+  private string saved_password = "TestPass_9x#2026";
   static Register_while_checkout()
   {
     Environment.SetEnvironmentVariable("HEADED", "1");
@@ -68,12 +71,12 @@ public class Register_while_checkout : PageTest
 
     //Fill in name and email adress
     await Page.FillAsync("[data-qa='signup-name']", "mockup user");
-    await Page.FillAsync("[data-qa='signup-email']", "Mockup_user_12@email.com");
+    await Page.FillAsync("[data-qa='signup-email']", saved_email);
     await Page.ClickAsync("[data-qa='signup-button']");
 
     await Page.CheckAsync("#id_gender1");
     await Page.FillAsync("[data-qa='name']", "jane doe");
-    await Page.FillAsync("[data-qa='password']", "password");
+    await Page.FillAsync("[data-qa='password']", saved_password);
 
     await Page.SelectOptionAsync("[data-qa='days']", "10");
     await Page.SelectOptionAsync("[data-qa='months']", "4");
