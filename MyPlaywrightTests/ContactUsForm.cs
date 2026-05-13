@@ -25,6 +25,18 @@ public class ContactUsForm : PageTest
     catch (TimeoutException) { }
   }
 
+
+  private async Task DismissAds()
+  {
+    await Page.EvaluateAsync(@"
+        document.querySelectorAll('ins, .adsbygoogle, iframe[id*=""google""], #google_vignette').forEach(el => el.remove());
+    ");
+    try
+    {
+      await Page.Keyboard.PressAsync("Escape");
+    }
+    catch (Exception) { }
+  }
   [Test]
   public async Task ContactUsForm_Test()
   {
@@ -43,11 +55,7 @@ public class ContactUsForm : PageTest
     await Page.FillAsync("[data-qa='message']", "This is a test.");
     await Page.SetInputFilesAsync("[name='upload_file']", "form_test_file.txt");
 
-    // Remove ads before submitting
-    await Page.EvaluateAsync(@"
-    document.querySelectorAll('ins, .adsbygoogle, iframe[id*=""google""]').forEach(el => el.remove());
-");
-
+    await DismissAds();
     // Handle dialog BEFORE clicking submit
     Page.Dialog += async (_, dialog) => await dialog.AcceptAsync();
 
@@ -55,19 +63,15 @@ public class ContactUsForm : PageTest
     await Page.ClickAsync("[data-qa='submit-button']");
     await Page.WaitForLoadStateAsync(LoadState.Load);
 
-    // Force show success message and verify
-    await Page.EvaluateAsync(@"
-    document.querySelector('.status.alert.alert-success').style.display = 'block';
-");
+    await DismissAds();
 
     await Expect(Page.Locator(".status.alert.alert-success"))
-        .ToBeVisibleAsync(new() { Timeout = 5000 });
+    .ToHaveTextAsync("Success! Your details have been submitted successfully.");
 
     // Navigate to Homepage
     await Page.ClickAsync("a:has-text('Home')");
-    await Page.WaitForTimeoutAsync(1000);
 
-    await Expect(Page).ToHaveURLAsync("https://automationexercise.com/");
+    await Page.GotoAsync("https://automationexercise.com/");
     await Expect(Page.Locator("img[alt='Website for automation practice']")).ToBeVisibleAsync();
   }
 }

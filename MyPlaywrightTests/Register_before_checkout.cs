@@ -67,8 +67,7 @@ public class Register_before_Checkout : PageTest
     await DismissAds();
 
     // Verify user is logged in
-    await Expect(Page.Locator("a:has-text('Logged in as')"))
-        .ToBeVisibleAsync(new() { Timeout = 700 });
+    await Expect(Page.Locator("a:has-text('Logged in as')")).ToBeVisibleAsync(new() { Timeout = 700 });
 
     // Add first product to cart
     await Page.Locator(".product-image-wrapper").Nth(1).HoverAsync();
@@ -91,20 +90,19 @@ public class Register_before_Checkout : PageTest
 
     await Page.ClickAsync("a:has-text('Proceed To Checkout')");
 
-    await Expect(Page.Locator("#address_delivery")).ToContainTextAsync("Mockup_name");
+    await Expect(Page.Locator("#address_delivery")).ToContainTextAsync("Test");
     await Expect(Page.Locator("#address_delivery")).ToContainTextAsync("User");
-    await Expect(Page.Locator("#address_delivery")).ToContainTextAsync("Microsoft");
+    await Expect(Page.Locator("#address_delivery")).ToContainTextAsync("Test Company");
 
     await Expect(Page.Locator("#address_delivery")).ToContainTextAsync("123 Test Street");
-    await Expect(Page.Locator("#address_delivery")).ToContainTextAsync("2346 Test Street");
+    await Expect(Page.Locator("#address_delivery")).ToContainTextAsync("456 Test Street");
 
-    await Expect(Page.Locator("#address_delivery")).ToContainTextAsync("Mockup");
-
-    await Expect(Page.Locator("#address_delivery")).ToContainTextAsync("Mockup");
-    await Expect(Page.Locator("#address_delivery")).ToContainTextAsync("Mockup");
-    await Expect(Page.Locator("#address_delivery")).ToContainTextAsync("10231");
     await Expect(Page.Locator("#address_delivery")).ToContainTextAsync("India");
-    await Expect(Page.Locator("#address_delivery")).ToContainTextAsync("1234567891");
+
+    await Expect(Page.Locator("#address_delivery")).ToContainTextAsync("Test State");
+    await Expect(Page.Locator("#address_delivery")).ToContainTextAsync("Test City");
+    await Expect(Page.Locator("#address_delivery")).ToContainTextAsync("12345");
+    await Expect(Page.Locator("#address_delivery")).ToContainTextAsync("1234567890");
 
     // Review order - verify products are in the order summary
     await Expect(Page.Locator("td.cart_description h4 a:has-text('Men Tshirt')")).ToBeVisibleAsync();
@@ -146,11 +144,16 @@ public class Register_before_Checkout : PageTest
 
     await DismissAds();
 
-    // Click delete button
+    await Page.WaitForLoadStateAsync(LoadState.Load);
+
+    //Delete account
     await Page.ClickAsync("a:has-text('Delete Account')");
+    await Page.WaitForLoadStateAsync(LoadState.Load);
 
     await Expect(Page.Locator("h2:has-text('Account Deleted!')"))
-     .ToBeVisibleAsync(new() { Timeout = 10000 });
+        .ToBeVisibleAsync(new() { Timeout = 10000 });
+
+    await Page.ClickAsync("a:has-text('Continue')");
   }
 
 }

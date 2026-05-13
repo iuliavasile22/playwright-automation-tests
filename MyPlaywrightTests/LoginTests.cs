@@ -7,15 +7,17 @@ using NUnit.Framework;
 
 public class LoginTests : PageTest
 {
-  private string saved_email = String.Empty;
-  private string saved_password = String.Empty;
-  private bool _accountCreated = false;
+  private string saved_email = "iulia456@gmail.com";
+  private string saved_password = "Password123";
+  // private bool _accountCreated = false;
 
   static LoginTests()
   {
     Environment.SetEnvironmentVariable("HEADED", "1");
   }
-  private async Task NavigateToHomepage()
+
+  [SetUp]
+  public async Task SetUp()
   {
     await Page.AddInitScriptAsync("window.alert = () => true;");
     await Page.GotoAsync("https://automationexercise.com/");
@@ -28,23 +30,7 @@ public class LoginTests : PageTest
     catch (TimeoutException) { }
   }
 
-  [SetUp]
-  public async Task SetUp()
-  {
-    if (!_accountCreated)
-    {
-      await NavigateToHomepage();
-      var helper = new AccountRegistrationHelper(Page);
-      await helper.RegisterAccount();
-      saved_email = helper.Email;
-      saved_password = helper.Password;
-      _accountCreated = true;
-      await NavigateToHomepage();
 
-      return;
-    }
-    await NavigateToHomepage();
-  }
   [Test]
 
   public async Task Valid_LoginTest()
