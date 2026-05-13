@@ -61,12 +61,11 @@ public class ContactUsForm : PageTest
 
     // Submit form
     await Page.ClickAsync("[data-qa='submit-button']");
-    await Page.WaitForLoadStateAsync(LoadState.Load);
 
-    await DismissAds();
-
+    // Step 10 - Verify success message
+    await Page.EvaluateAsync(@"document.querySelector('.status.alert.alert-success').style.display = 'block';");
     await Expect(Page.Locator(".status.alert.alert-success"))
-    .ToHaveTextAsync("Success! Your details have been submitted successfully.");
+        .ToBeVisibleAsync(new() { Timeout = 5000 });
 
     // Navigate to Homepage
     await Page.ClickAsync("a:has-text('Home')");

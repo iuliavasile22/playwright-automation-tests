@@ -11,9 +11,9 @@ public class SearchProduct : PageTest
     Environment.SetEnvironmentVariable("HEADED", "1");
   }
 
-  private bool _accountCreated = false;
 
-  private async Task NavigateToHomepage()
+  [SetUp]
+  public async Task SetUp()
   {
     await Page.AddInitScriptAsync("window.alert = () => true;");
     await Page.GotoAsync("https://automationexercise.com/");
@@ -26,26 +26,13 @@ public class SearchProduct : PageTest
     catch (TimeoutException) { }
   }
 
-  [SetUp]
-  public async Task SetUp()
-  {
-    if (!_accountCreated)
-    {
-      await NavigateToHomepage();
-      var helper = new AccountRegistrationHelper(Page);
-      await helper.RegisterAccount();
-      _accountCreated = true;
-      return;
-    }
-
-    await NavigateToHomepage();
-  }
-
 
   [Test]
 
   public async Task SearchProduct_Test()
   {
+    await Expect(Page).ToHaveURLAsync("https://automationexercise.com/");
+    await Expect(Page).ToHaveTitleAsync("Automation Exercise");
     //Click products button
     await Page.ClickAsync("a:has-text('Products')");
 

@@ -56,6 +56,9 @@ public class Side_menu_category_selection : PageTest
   [Test]
   public async Task Side_menu_category_selection_Test()
   {
+    await Expect(Page).ToHaveURLAsync("https://automationexercise.com/");
+    await Expect(Page).ToHaveTitleAsync("Automation Exercise");
+
     // Locate and expand category
     await Page.ClickAsync("a:has-text('Women')");
     await Page.WaitForLoadStateAsync(LoadState.Load);

@@ -100,6 +100,8 @@ public class Register_before_Checkout : PageTest
 
     await Page.ClickAsync("a:has-text('Proceed To Checkout')");
 
+    await DismissAds();
+
     await Expect(Page.Locator("#address_delivery")).ToContainTextAsync("Test");
     await Expect(Page.Locator("#address_delivery")).ToContainTextAsync("User");
     await Expect(Page.Locator("#address_delivery")).ToContainTextAsync("Test Company");
@@ -153,12 +155,11 @@ public class Register_before_Checkout : PageTest
     await Expect(Page).ToHaveURLAsync(new Regex("payment_done"));
 
     await DismissAds();
-
-    await Page.WaitForLoadStateAsync(LoadState.Load);
-
     //Delete account
     await Page.ClickAsync("a:has-text('Delete Account')");
     await Page.WaitForLoadStateAsync(LoadState.Load);
+
+    await DismissAds();
 
     await Expect(Page.Locator("h2:has-text('Account Deleted!')"))
         .ToBeVisibleAsync(new() { Timeout = 10000 });

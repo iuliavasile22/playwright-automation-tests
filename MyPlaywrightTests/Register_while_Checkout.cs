@@ -4,10 +4,10 @@ using NUnit.Framework;
 using System.Text.RegularExpressions;
 
 [TestFixture]
-public class Register_while_Checkout : PageTest
+public class Register_while_checkout : PageTest
 {
 
-  static Register_while_Checkout()
+  static Register_while_checkout()
   {
     Environment.SetEnvironmentVariable("HEADED", "1");
   }
@@ -41,8 +41,10 @@ public class Register_while_Checkout : PageTest
 
 
   [Test]
-  public async Task Register_while_CheckOut()
+  public async Task Register_while_Checkout_Test()
   {
+    await Expect(Page).ToHaveURLAsync("https://automationexercise.com/");
+    await Expect(Page).ToHaveTitleAsync("Automation Exercise");
     // Add first product to cart
     await Page.Locator(".product-image-wrapper").Nth(0).HoverAsync();
     await Page.ClickAsync(".add-to-cart[data-product-id='1']");
@@ -66,7 +68,7 @@ public class Register_while_Checkout : PageTest
 
     //Fill in name and email adress
     await Page.FillAsync("[data-qa='signup-name']", "mockup user");
-    await Page.FillAsync("[data-qa='signup-email']", "Mockup12@email.com");
+    await Page.FillAsync("[data-qa='signup-email']", "Mockup_user_12@email.com");
     await Page.ClickAsync("[data-qa='signup-button']");
 
     await Page.CheckAsync("#id_gender1");
@@ -175,6 +177,9 @@ public class Register_while_Checkout : PageTest
 
     // Click delete button
     await Page.ClickAsync("a:has-text('Delete Account')");
+    await Page.WaitForLoadStateAsync(LoadState.Load);
+
     await Expect(Page.Locator("h2:has-text('Account deleted!')")).ToBeVisibleAsync();
+    await Page.ClickAsync("a:has-text('Continue')");
   }
 }

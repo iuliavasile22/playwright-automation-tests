@@ -60,6 +60,8 @@ public class View_cart_after_navigation : PageTest
   [Test]
   public async Task View_cart_after_navigation_Test()
   {
+    await Expect(Page).ToHaveURLAsync("https://automationexercise.com/");
+    await Expect(Page).ToHaveTitleAsync("Automation Exercise");
 
     await Page.ClickAsync("a:has-text('Signup / Login')");
 
