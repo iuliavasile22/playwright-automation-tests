@@ -11,9 +11,9 @@ public class AddProductsInCart : PageTest
     Environment.SetEnvironmentVariable("HEADED", "1");
   }
 
-  private bool _accountCreated = false;
 
-  private async Task NavigateToHomepage()
+  [SetUp]
+  public async Task SetUp()
   {
     await Page.AddInitScriptAsync("window.alert = () => true;");
     await Page.GotoAsync("https://automationexercise.com/");
@@ -26,20 +26,6 @@ public class AddProductsInCart : PageTest
     catch (TimeoutException) { }
   }
 
-  [SetUp]
-  public async Task SetUp()
-  {
-    if (!_accountCreated)
-    {
-      await NavigateToHomepage();
-      var helper = new AccountRegistrationHelper(Page);
-      await helper.RegisterAccount();
-      _accountCreated = true;
-      return;
-    }
-
-    await NavigateToHomepage();
-  }
   [Test]
   public async Task Valid_AddProductsInCart_Test()
   {

@@ -106,11 +106,9 @@ public class Side_menu_category_selection : PageTest
 
     // Scroll down to make category sidebar visible
     await Page.EvaluateAsync("window.scrollTo(0, 500)");
-    await Page.WaitForTimeoutAsync(500);
 
     // Third category - expand Kids
     await Page.ClickAsync("a[href='#Kids']");
-    await Page.WaitForTimeoutAsync(1000);
 
     // Click Dress subcategory
     await Page.ClickAsync("a[href='/category_products/4']");
