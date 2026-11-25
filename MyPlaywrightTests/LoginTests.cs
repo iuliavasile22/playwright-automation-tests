@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
@@ -96,7 +95,7 @@ public class LoginTests : PageTest
     //Verify that 'Login to your account is visible'
     await Expect(Page.Locator("h2:has-text('Login to your account')")).ToBeVisibleAsync();
 
-    //Enter correct email address and password
+    //Enter incorrect email address and password
     await Page.FillAsync("[data-qa='login-email']", "wrong_email@gmail.com");
     await Page.FillAsync("[data-qa='login-password']", "wrong_password");
     await Page.ClickAsync("[data-qa='login-button']");
