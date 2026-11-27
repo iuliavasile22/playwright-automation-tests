@@ -1,6 +1,5 @@
 using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
-using MyPlaywrightTests;
 using NUnit.Framework;
 
 [TestFixture]
@@ -10,6 +9,11 @@ public class LoginTests_POM : PageTest
   private string saved_email = string.Empty;
   private string saved_password = string.Empty;
   private bool _accountCreated = false;
+
+  static LoginTests_POM()
+  {
+    Environment.SetEnvironmentVariable("HEADED", "1");
+  }
 
   private async Task NavigateToHomepage()
   {
