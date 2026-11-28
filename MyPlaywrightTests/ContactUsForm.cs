@@ -53,7 +53,10 @@ public class ContactUsForm : PageTest
     await Page.FillAsync("[data-qa='email']", "Mockup_User1234@gmail.com");
     await Page.FillAsync("[data-qa='subject']", "Test Subject");
     await Page.FillAsync("[data-qa='message']", "This is a test.");
-    await Page.SetInputFilesAsync("[name='upload_file']", "form_test_file.txt");
+
+
+    var filePath = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData", "form_test_file.txt");
+    await Page.SetInputFilesAsync("input[name='upload_file']", filePath);
 
     await DismissAds();
     // Handle dialog BEFORE clicking submit
